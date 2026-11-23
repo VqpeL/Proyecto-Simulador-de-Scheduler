@@ -18,7 +18,7 @@ public:
     int getcuantoInicial() const;
     int getcuantoRestante() const;
 
-    void ejecutar(int tiempo);
+    int ejecutar(int tiempo);
     bool procesoTerminado() const;
     void mostrar() const;
 };
