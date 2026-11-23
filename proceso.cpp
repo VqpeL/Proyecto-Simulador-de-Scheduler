@@ -6,13 +6,12 @@
 #include <deque>
 #include <stdexcept>
 #include "procesos.h"
-//Posibles librerias necesarias
-// Throw generauna excepcion ante un valor no valido (stdexcept)
+
 
 Proceso::Proceso(int id, int tamano, int cuanto){
 
     if (id <= 0 || tamano <= 0 || cuanto <= 0){
-        throw std::invalid_argument("Los datos deben de ser positivos");
+        throw std::invalid_argument("Los datos deben de ser positivos"); // // Throw genera una excepcion ante un valor no valido (stdexcept)
     }
 
     this->id = id;
