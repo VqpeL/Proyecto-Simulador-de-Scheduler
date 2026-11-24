@@ -31,6 +31,9 @@ ResultadoCiclo RoundRobin::ejecutarCiclo()
 
     Proceso *actual = colaProcesos.front();
     colaProcesos.pop_front();
+    std::cout << "Atendiendo proceso ";
+    actual->mostrar();
+    std::cout << "\n";
 
     int consumido = actual->ejecutar(cuantoSistema);
     bool terminado = actual->procesoTerminado();
@@ -38,6 +41,11 @@ ResultadoCiclo RoundRobin::ejecutarCiclo()
     if (!terminado)
     {
         colaProcesos.push_back(actual);
+    }else{
+        std::cout << "Descargando proceso ";
+        actual->mostrar();
+        std::cout << "\n";
+        
     }
 
     ResultadoCiclo resultado;
@@ -52,7 +60,7 @@ ResultadoCiclo RoundRobin::ejecutarCiclo()
 
 void RoundRobin::mostrarCola() const
 {
-    std::cout << "\nCola Round Robin: ";
+    std::cout << "Lista Round Robin ";
 
     if (colaProcesos.empty())
     {

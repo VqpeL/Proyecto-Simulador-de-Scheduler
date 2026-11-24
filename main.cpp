@@ -6,6 +6,9 @@
 #include <random>
 #include <limits>
 #include <string>
+#include <chrono>
+#include <thread>
+#include <conio.h>
 
 #include "procesos.h"
 #include "firstFit.h"
@@ -38,7 +41,7 @@ void pausar()
 
 void mostrarPendientes(const std::deque<Proceso *> &pendientes)
 {
-    std::cout << "\nProcesos pendientes: ";
+    std::cout << "\nProcesos que quedaron pendientes: ";
 
     if (pendientes.empty())
     {
@@ -65,7 +68,7 @@ int main()
     int cuantoMaximo;
     int algoritmo;
 
-    cout << "       SIMULADOR SCHEDULER CON ROUND ROBIN\n";
+    cout << "SIMULADOR SCHEDULER CON ROUND ROBIN\n";
 
     cout << "\nMemoria maxima:\n";
     cout << "1. 1 MB\n";
@@ -169,7 +172,7 @@ int main()
 
         Proceso *nuevo = &procesos.back();
 
-        cout << "\nNuevo proceso: ";
+        cout << "\nEntra proceso  ";
         nuevo->mostrar();
         cout << "\n";
 
@@ -178,18 +181,15 @@ int main()
         siguienteId++;
     };
 
-    // Generar el primer proceso
-    generarProceso();
-    cout << "------INICIO DE LA SIMULACION=------\n";
+    cout << "\n------INICIO DE LA SIMULACION=------\n";
 
     bool continuar = true;
+    int delayMs = 1000;
 
     while (continuar)
     {
 
         ciclo++;
-
-        cout << "\n\n--------- CICLO " << ciclo << " ----------\n";
 
         // Generar un proceso nuevo en cada ciclo
         generarProceso();
@@ -200,25 +200,21 @@ int main()
 
             Proceso *proceso = pendientes.front();
 
-            cout << "\nIntentando ingresar: ";
-            proceso->mostrar();
-            cout << "\n";
-
             bool asignado = false;
 
             if (algoritmo == 1)
             {
                 asignado = firstFit->asignar(*proceso);
+                firstFit->mostrarMemoria();
             }
             else
             {
                 asignado = buddy->asignarProceso(*proceso);
+                buddy->mostrarMemoria();
             }
 
             if (asignado)
             {
-
-                cout << "Proceso P" << proceso->getId() << " asignado correctamente\n";
 
                 roundRobin.agregarProceso(*proceso);
 
@@ -235,29 +231,14 @@ int main()
         }
 
         // ejecutar rr
+        // ejecutar rr
         if (!roundRobin.estaVacia())
         {
-
-            cout << "\nAtendiendo proceso...\n";
-
-            ResultadoCiclo resultado =
-                roundRobin.ejecutarCiclo();
-
-            cout << "\nProceso ejecutado: P"
-                 << resultado.idProceso << "\n";
-
-            cout << "Tiempo consumido: "
-                 << resultado.tiempoConsumido << "\n";
-
-            cout << "Tiempo restante: "
-                 << resultado.tiempoRestante << "\n";
+            ResultadoCiclo resultado = roundRobin.ejecutarCiclo();
 
             if (resultado.terminado)
             {
-
-                cout << "Proceso terminado\n";
-
-                // Liberar memori
+                // Liberar memoria
                 if (algoritmo == 1)
                 {
                     firstFit->liberar(resultado.idProceso);
@@ -267,28 +248,21 @@ int main()
                     buddy->liberarProceso(resultado.idProceso);
                 }
 
-                cout << "Memoria liberada\n";
-
                 procesosTerminados++;
-            }
-            else
-            {
-                cout << "El proceso regresa al final de la cola\n";
             }
         }
         else
         {
-            cout << "\nNo hay procesos para ejecutar\n";
+            cout << "No hay procesos para ejecutar\n";
         }
 
-        // MOSTRAR INFO
-        cout << "\n---------- ESTADO DEL SISTEMA ----------\n";
+        // Actualizar estado de los bloques antes de imprimir
+        if (algoritmo != 1 && buddy != nullptr)
+        {
+            buddy->actualizarProcesos(procesos);
+        }
 
         roundRobin.mostrarCola();
-
-        mostrarPendientes(pendientes);
-
-        cout << "\n---------- ESTADO DE MEMORIA ----------\n";
 
         if (algoritmo == 1)
         {
@@ -299,33 +273,29 @@ int main()
             buddy->mostrarMemoria();
         }
 
-        cout << "\nProcesos terminados: "
-             << procesosTerminados << "\n";
 
-        // CONTROLAR
-        cout << "\nENTER = Siguiente ciclo";
-        cout << "\nS = Detener simulacion";
-        cout << "\nOpcion: ";
+        std::this_thread::sleep_for(std::chrono::milliseconds(delayMs));
 
-        char opcion;
-        cin >> opcion;
-
-        if (opcion == 'S' || opcion == 's')
+        if (_kbhit())
         {
-            continuar = false;
+            char tecla = _getch();
+            if (tecla == 's' || tecla == 'S')
+            {
+                continuar = false;
+            }
         }
     }
 
-    cout << "       FIN DE LA SIMULACION\n";
+    cout << "\nFIN DE LA SIMULACION\n";
 
     cout << "Procesos generados: "
          << siguienteId - 1 << "\n";
 
-    cout << "Procesos terminados: "
+    cout << "Procesos atendidos: "
          << procesosTerminados << "\n";
 
-    cout << "Procesos pendientes de ingreso: "
-         << pendientes.size() << "\n";
+    mostrarPendientes(pendientes);
+    cout << "\n";
 
     cout << "\nEstado final de memoria:\n";
 

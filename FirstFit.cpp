@@ -115,25 +115,23 @@ const std::vector<BloqueMemoria>& FirstFit::obtenerBloques() const {
 }
 
 void FirstFit::mostrarMemoria() const {
-    std::cout << "\nEstado de memoria:\n";
 
     for (const BloqueMemoria& bloque : bloques) {
-        std::cout << "@" << bloque.inicio << " [";
+        std::cout << "[";
 
         if (bloque.proceso == nullptr) {
-            std::cout << "0," << bloque.tamano << ",0] LIBRE";
+            std::cout << "0," << bloque.tamano << ",0]";
         }
         else {
             std::cout << bloque.proceso->getId() << ","
                       << bloque.tamano << ","
                       << bloque.proceso->getcuantoRestante()
-                      << "] OCUPADO";
+                      << "]";
         }
-
-        std::cout << '\n';
     }
+    std::cout << "\n";
 
-    std::cout << "Memoria libre: "
-              << memoriaLibre() << "/"
-              << memoriaTotal << " KB\n";
+    //std::cout << "Memoria libre: "
+    //          << memoriaLibre() << "/"
+    //          << memoriaTotal << " KB\n"; (esto, creo que quedaria bien meterlo)
 }

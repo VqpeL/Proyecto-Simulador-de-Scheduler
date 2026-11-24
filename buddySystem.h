@@ -1,8 +1,8 @@
-
 #ifndef BUDDYSYSTEM_H
 #define BUDDYSYSTEM_H
 
 #include <vector>
+#include <list>
 #include "procesos.h"
 
 class BloqueBuddy
@@ -11,7 +11,7 @@ private:
     int inicio;
     int tamano;
     bool libre;
-    int idProceso;
+    Proceso proceso;
 
 public:
     BloqueBuddy(int inicio, int tamano);
@@ -20,10 +20,12 @@ public:
     int getTamano() const;
     bool estaLibre() const;
     int getIdProceso() const;
+    const Proceso& getProceso() const;
+    
 
     void setTamano(int nuevoTamano);
 
-    void ocupar(int id);
+    void ocupar(const Proceso &pros);
     void liberar();
 };
 
@@ -36,16 +38,16 @@ private:
     std::vector<BloqueBuddy> bloques;
 
     int calcularTamanoRequerido(int tamanoProcesoKB) const;
-
     void fusionarBuddies();
 
 public:
     BuddySystem(int memoriaMB);
 
     int getMemoriaTotalKB() const;
-    
+
     bool asignarProceso(const Proceso &proceso);
     bool liberarProceso(int idProceso);
+    void actualizarProcesos(const std::list<Proceso> &listaProcesos);
 
     void mostrarMemoria() const;
 };
