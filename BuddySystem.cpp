@@ -170,7 +170,7 @@ void BuddySystem::fusionarBuddies()
                     actual.setTamano(tamPadre);
                     bloques.erase(bloques.begin() + static_cast<long>(i + 1));
                     huboFusion = true;
-                    break;
+                    break;    
                 }
             }
         }
@@ -220,11 +220,19 @@ void BuddySystem::actualizarProcesos(const std::list<Proceso> &listaProcesos)
     }
 }
 
+
+
 void BuddySystem::mostrarMemoria() const
 {
     for (size_t i = 0; i < bloques.size(); i++)
     {
         const BloqueBuddy &bloque = bloques[i];
+
+  // Marca la separación entre las dos mitades de memoria
+        if (bloque.getInicio() == memoriaTotalKB / 2)
+        {
+            std::cout << "@ ";
+        }
 
         if (bloque.estaLibre())
         {
@@ -238,6 +246,7 @@ void BuddySystem::mostrarMemoria() const
                       << p.getTamano() << ", "
                       << p.getcuantoRestante() << "]";
         }
+        std::cout << " "; // separa los bloques 
     }
     std::cout << "\n";
 }
