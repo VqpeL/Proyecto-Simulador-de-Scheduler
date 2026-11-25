@@ -41,7 +41,7 @@ void pausar()
 
 void mostrarPendientes(const std::deque<Proceso *> &pendientes)
 {
-    std::cout << "\nProcesos que quedaron pendientes: ";
+    std::cout << "\nProcesos pendientes a entrar: ";
 
     if (pendientes.empty())
     {
@@ -172,7 +172,7 @@ int main()
 
         Proceso *nuevo = &procesos.back();
 
-        cout << "\nEntra proceso  ";
+        cout << "Entra proceso  ";
         nuevo->mostrar();
         cout << "\n";
 
@@ -191,9 +191,12 @@ int main()
 
         ciclo++;
 
+        cout << "\n";
         // Generar un proceso nuevo en cada ciclo
-        generarProceso();
-
+        if(pendientes.empty()){
+            generarProceso();
+        }
+        
         // intenta asignar
         if (!pendientes.empty())
         {
@@ -262,6 +265,7 @@ int main()
             buddy->actualizarProcesos(procesos);
         }
 
+        cout << "Lista Round Robin ";
         roundRobin.mostrarCola();
 
         if (algoritmo == 1)
@@ -295,6 +299,10 @@ int main()
          << procesosTerminados << "\n";
 
     mostrarPendientes(pendientes);
+    cout << "\n";
+
+    cout << "Procesos pendientes:";
+    roundRobin.mostrarCola();
     cout << "\n";
 
     cout << "\nEstado final de memoria:\n";

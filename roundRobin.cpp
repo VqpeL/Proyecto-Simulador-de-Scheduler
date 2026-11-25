@@ -60,7 +60,6 @@ ResultadoCiclo RoundRobin::ejecutarCiclo()
 
 void RoundRobin::mostrarCola() const
 {
-    std::cout << "Lista Round Robin ";
 
     if (colaProcesos.empty())
     {
