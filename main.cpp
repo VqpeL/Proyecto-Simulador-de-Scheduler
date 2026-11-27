@@ -41,7 +41,6 @@ void pausar()
 
 void mostrarPendientes(const std::deque<Proceso *> &pendientes)
 {
-    std::cout << "\nProcesos pendientes a entrar: ";
 
     if (pendientes.empty())
     {
@@ -195,6 +194,9 @@ int main()
         // Generar un proceso nuevo en cada ciclo
         if(pendientes.empty()){
             generarProceso();
+        } else {
+            cout << "\nProceso pendiente a entrar: ";
+            mostrarPendientes(pendientes);
         }
         
         // intenta asignar
@@ -298,6 +300,7 @@ int main()
     cout << "Procesos atendidos: "
          << procesosTerminados << "\n";
 
+    cout << "\nProceso pendiente a entrar: ";
     mostrarPendientes(pendientes);
     cout << "\n";
 
